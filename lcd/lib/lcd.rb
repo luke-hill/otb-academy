@@ -6,9 +6,7 @@ class LCD
   end
 
   def render
-    puts render_line_one
-    puts render_line_two
-    puts render_line_three
+    "#{render_line_one}\n#{render_line_two}\n#{render_line_three}\n"
   end
 
   private
@@ -83,7 +81,7 @@ class LCD
       6 => [0, 1, 2, 4, 5, 6],
       7 => [0, 3, 6],
       8 => [0, 1, 2, 3, 4, 5, 6],
-      9 => [0, 1, 2, 3, 4, 6],
+      9 => [0, 1, 2, 3, 5, 6],
     }
   end
 end
