@@ -10,11 +10,40 @@
 # missing handler and any other supporting methods.
 
 class Proxy
+  attr_accessor :object, :messages
   def initialize(target_object)
     @object = target_object
-    # ADD MORE CODE HERE
+    @messages = []
   end
-  # WRITE CODE HERE
+
+  def method_missing(method_call, *args)
+    begin
+      messages << method_call
+      object.send(method_call, *args)
+    rescue NoMethodError => e
+      'ive been rescued'
+    end
+  end
+
+  def respond_to?(method_call)
+    object.respond_to?(method_call)
+  end
+end
+
+class Television
+  attr_accessor :channel
+
+  def power
+    if @power == :on
+      @power = :off
+    else
+      @power = :on
+    end
+  end
+
+  def on?
+    @power == :on
+  end
 end
 
 RSpec.describe "the proxy object" do
@@ -35,6 +64,7 @@ RSpec.describe "the proxy object" do
 
     expect( tv.channel ).to eq( 10 )
     expect( tv ).to be_on
+    #expect(tv.on?).to be true
   end
 
   it "records messages sent to the tv" do
