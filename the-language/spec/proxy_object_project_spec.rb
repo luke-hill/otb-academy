@@ -178,4 +178,3 @@ RSpec.describe "a television" do
     expect( tv.channel ).to eq( 11 )
   end
 end
-
