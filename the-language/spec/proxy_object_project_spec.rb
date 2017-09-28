@@ -30,6 +30,9 @@ class Proxy
   end
 end
 
+#TV Class not allowed to be changed!
+#Currently on 5/11 tests passing
+
 class Television
   attr_accessor :channel
 
@@ -48,10 +51,7 @@ end
 
 RSpec.describe "the proxy object" do
   it "returns a wrapped object" do
-    # NOTE: The Television class is defined below
     tv = Proxy.new(Television.new)
-
-    # HINT: Proxy class is defined above, may need tweaking...
 
     expect( tv ).to be_a( Proxy )
   end
@@ -64,7 +64,6 @@ RSpec.describe "the proxy object" do
 
     expect( tv.channel ).to eq( 10 )
     expect( tv ).to be_on
-    #expect(tv.on?).to be true
   end
 
   it "records messages sent to the tv" do
@@ -79,9 +78,7 @@ RSpec.describe "the proxy object" do
   it "handles invalid messages" do
     tv = Proxy.new(Television.new)
 
-    expect {
-      tv.no_such_method
-    }.to raise_error(NoMethodError)
+    expect { tv.no_such_method }.to raise_error(NoMethodError)
   end
 
   it "reports proxy methods have been called" do
@@ -114,28 +111,6 @@ RSpec.describe "the proxy object" do
 
     expect( result ).to eq( ["CODE", "MASH", "2009"] )
     expect( proxy.messages ).to eq( [:upcase!, :split] )
-  end
-end
-
-
-# ====================================================================
-# The following code is to support the testing of the Proxy class.  No
-# changes should be necessary to anything below this comment.
-
-# Example class using in the proxy testing above.
-class Television
-  attr_accessor :channel
-
-  def power
-    if @power == :on
-      @power = :off
-    else
-      @power = :on
-    end
-  end
-
-  def on?
-    @power == :on
   end
 end
 
