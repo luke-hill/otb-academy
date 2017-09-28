@@ -1,12 +1,38 @@
 class LCD
-  attr_reader :input
+  attr_reader :input, :width, :height
 
-  def initialize(input)
+  def initialize(input, width: 1, height: 1)
     @input = input
+    @width = width
+    @height = height
   end
 
   def render
-    "#{render_line_one}\n#{render_line_two}\n#{render_line_three}\n"
+    "#{render_line_one}\n"\
+    "#{render_height_between_lines_one_and_two}"\
+    "#{render_line_two}\n"\
+    "#{render_height_between_lines_two_and_three}"\
+    "#{render_line_three}\n"
+  end
+
+  def render_height_between_lines_one_and_two
+    ans = ''
+    spaces = ' ' * width
+    number_as_digits.each do |digit|
+      ans << "#{pipe(digit, 1)}#{spaces}#{pipe(digit, 3)}"
+    end
+
+    "#{ans}\n" * (height - 1)
+  end
+
+  def render_height_between_lines_two_and_three
+    ans = ''
+    spaces = ' ' * width
+    number_as_digits.each do |digit|
+      ans << "#{pipe(digit, 4)}#{spaces}#{pipe(digit, 6)}"
+    end
+
+    "#{ans}\n" * (height - 1)
   end
 
   private
@@ -53,9 +79,9 @@ class LCD
 
   def underscore(digit, position)
     if write_character?(digit, position)
-      '_'
+      '_' * width
     else
-      ' '
+      ' ' * width
     end
   end
 
