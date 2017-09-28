@@ -51,6 +51,31 @@ describe 'LCD' do
         expect( nine_nine_one_three.render ).to eq( expected )
       end
     end
+
+    context 'viewing multiple lowercase letters from a-f' do
+      let(:abc) { LCD.new('abc') }
+      let(:fed) { LCD.new('fed') }
+
+      it 'should render abc' do
+        expected = <<~SQUIGGLY_HEREDOC
+           _       
+           _||_  _ 
+          |_||_||_ 
+        SQUIGGLY_HEREDOC
+
+        expect( abc.render ).to eq( expected )
+      end
+
+      it 'should render fed' do
+        expected = <<~SQUIGGLY_HEREDOC
+           _  _    
+          |_ |_  _|
+          |  |_ |_|
+        SQUIGGLY_HEREDOC
+
+        expect( fed.render ).to eq( expected )
+      end
+    end
   end
 
   context 'with parameter modifications' do
@@ -148,6 +173,26 @@ describe 'LCD' do
         SQUIGGLY_HEREDOC
 
         expect( four_seven_one_eight_nine.render ).to eq( expected )
+      end
+    end
+
+    context 'viewing multiple lowercase letters from a-f with modified width AND height' do
+      let(:abcdef) { LCD.new('abcdef', height: 4, width: 6) }
+
+      it 'should render a heightened AND widened abcdef' do
+        expected = <<~SQUIGGLY_HEREDOC
+        ______                          ______  ______ 
+              ||                      ||       |       
+              ||                      ||       |       
+              ||                      ||       |       
+        ______||______  ______  ______||______ |______ 
+       |      ||      ||       |      ||       |       
+       |      ||      ||       |      ||       |       
+       |      ||      ||       |      ||       |       
+       |______||______||______ |______||______ |       
+        SQUIGGLY_HEREDOC
+
+        expect( abcdef.render ).to eq( expected )
       end
     end
   end

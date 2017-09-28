@@ -62,7 +62,11 @@ class LCD
   end
 
   def number_as_digits
-    input.digits.reverse
+    if input.is_a?(Integer)
+      input.digits.reverse
+    else
+      input.each_char
+    end
   end
 
   def line_one(digit)
@@ -94,10 +98,10 @@ class LCD
   end
 
   def write_character?(digit, position)
-    number_lcd_table[digit].include?(position)
+    lcd_table[digit].include?(position)
   end
 
-  def number_lcd_table #Top,Mid-Left,Mid,Mid-Right,Bot-Left,Bot,Bot-Right
+  def lcd_table #Top,Mid-Left,Mid,Mid-Right,Bot-Left,Bot,Bot-Right
     {
       1 => [3, 6],
       2 => [0, 2, 3, 4, 5],
@@ -108,6 +112,12 @@ class LCD
       7 => [0, 3, 6],
       8 => [0, 1, 2, 3, 4, 5, 6],
       9 => [0, 1, 2, 3, 5, 6],
+      'a' => [0, 2, 3, 4, 5, 6],
+      'b' => [1, 2, 4, 5, 6],
+      'c' => [2, 4, 5],
+      'd' => [2, 3, 4, 5, 6],
+      'e' => [0, 1, 2, 4, 5],
+      'f' => [0, 1, 2, 4],
     }
   end
 end
