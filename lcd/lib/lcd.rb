@@ -15,50 +15,32 @@ class LCD
     "#{render_line_three}\n"
   end
 
-  def render_height_between_lines_one_and_two
-    ans = ''
-    spaces = ' ' * width
-    number_as_digits.each do |digit|
-      ans << "#{pipe(digit, 1)}#{spaces}#{pipe(digit, 3)}"
-    end
+  private
 
-    "#{ans}\n" * (height - 1)
+  def render_height_between_lines_one_and_two
+    spaces = ' ' * width
+    one_line = number_as_digits.map { |digit| first_height_extender(digit, spaces) }.join
+
+    "#{one_line}\n" * (height - 1)
   end
 
   def render_height_between_lines_two_and_three
-    ans = ''
     spaces = ' ' * width
-    number_as_digits.each do |digit|
-      ans << "#{pipe(digit, 4)}#{spaces}#{pipe(digit, 6)}"
-    end
+    one_line = number_as_digits.map { |digit| second_height_extender(digit, spaces) }.join
 
-    "#{ans}\n" * (height - 1)
+    "#{one_line}\n" * (height - 1)
   end
 
-  private
-
   def render_line_one
-    ans = ''
-    number_as_digits.each do |digit|
-      ans << line_one(digit)
-    end
-    ans
+    number_as_digits.map { |digit| line_one(digit) }.join
   end
 
   def render_line_two
-    ans = ''
-    number_as_digits.each do |digit|
-      ans << line_two(digit)
-    end
-    ans
+    number_as_digits.map { |digit| line_two(digit) }.join
   end
 
   def render_line_three
-    ans = ''
-    number_as_digits.each do |digit|
-      ans << line_three(digit)
-    end
-    ans
+    number_as_digits.map { |digit| line_three(digit) }.join
   end
 
   def number_as_digits
@@ -72,9 +54,17 @@ class LCD
   def line_one(digit)
     " #{underscore(digit, 0)} "
   end
+  
+  def first_height_extender(digit, spaces)
+    "#{pipe(digit, 1)}#{spaces}#{pipe(digit, 3)}"
+  end
 
   def line_two(digit)
     "#{pipe(digit, 1)}#{underscore(digit, 2)}#{pipe(digit, 3)}"
+  end
+
+  def second_height_extender(digit, spaces)
+    "#{pipe(digit, 4)}#{spaces}#{pipe(digit, 6)}"
   end
 
   def line_three(digit)
