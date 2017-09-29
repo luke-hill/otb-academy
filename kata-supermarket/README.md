@@ -1,12 +1,12 @@
 # Kata - The supermarket
 
-Welcome to Luke's Supermarket. Where we stock 5 goods, any of which can be offered on a 3for2 deal.
+Welcome to Luke's Supermarket. Where we stock `5` goods (`peas, beans, wafers, christmas cards and orange juice`), any of which can be offered on a 3for2 deal.
 
 The goods prices have been isolated inside `./lib/prices.rb` - The prices are stored in cents which is essentially pence in England
 
 The rules are maintained in `./lib/rules.rb` - Note as an MVP I've only created one - The 3for2 rule. More can be added
 
-##Logic
+## Logic
 
 Instantiate a Till object, which needs to be instantiated with an Array of strings.
 
