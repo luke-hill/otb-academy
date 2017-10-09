@@ -17,12 +17,17 @@ class Proxy
   end
 
   def method_missing(method_call, *args)
-    begin
-      messages << method_call
-      object.send(method_call, *args)
-    rescue NoMethodError => e
-      'ive been rescued'
-    end
+    messages << method_call
+    
+    object.send(method_call, *args)
+  end
+  
+  def called?(request)
+    messages.include?(request)
+  end
+
+  def number_of_times_called(request)
+    messages.count(request)
   end
 
   def respond_to?(method_call)
@@ -30,8 +35,8 @@ class Proxy
   end
 end
 
-#TV Class not allowed to be changed!
-#Currently on 5/11 tests passing
+# TV Class not allowed to be changed!
+# Currently All tests pass!
 
 class Television
   attr_accessor :channel
@@ -49,107 +54,107 @@ class Television
   end
 end
 
-RSpec.describe "the proxy object" do
-  it "returns a wrapped object" do
+RSpec.describe 'the proxy object' do
+  it 'returns a wrapped object' do
     tv = Proxy.new(Television.new)
 
-    expect( tv ).to be_a( Proxy )
+    expect(tv).to be_a(Proxy)
   end
 
-  it "still operates the TV as expected" do
+  it 'still operates the TV as expected' do
     tv = Proxy.new(Television.new)
 
     tv.channel = 10
     tv.power
 
-    expect( tv.channel ).to eq( 10 )
-    expect( tv ).to be_on
+    expect(tv.channel).to eq(10)
+    expect(tv).to be_on
   end
 
-  it "records messages sent to the tv" do
+  it 'records messages sent to the tv' do
     tv = Proxy.new(Television.new)
 
     tv.power
     tv.channel = 10
 
-    expect( [:power, :channel=] ).to eq( tv.messages )
+    expect(%i[power channel=]).to eq(tv.messages)
   end
 
-  it "handles invalid messages" do
+  it 'handles invalid messages' do
     tv = Proxy.new(Television.new)
 
     expect { tv.no_such_method }.to raise_error(NoMethodError)
   end
 
-  it "reports proxy methods have been called" do
+  it 'reports proxy methods have been called' do
     tv = Proxy.new(Television.new)
 
     tv.power
     tv.power
 
-    expect( tv.called?(:power) ).to be_truthy
-    expect( tv.called?(:channel) ).to be_falsey
+    expect(tv.called?(:power)).to be_truthy
+    expect(tv.called?(:channel)).to be_falsey
   end
 
-  it "counts method calls" do
+  it 'counts method calls' do
     tv = Proxy.new(Television.new)
 
     tv.power
     tv.channel = 48
     tv.power
 
-    expect( tv.number_of_times_called(:power) ).to eq( 2 )
-    expect( tv.number_of_times_called(:channel=) ).to eq( 1 )
-    expect( tv.number_of_times_called(:on?) ).to eq( 0 )
+    expect(tv.number_of_times_called(:power)).to eq(2)
+    expect(tv.number_of_times_called(:channel=)).to eq(1)
+    expect(tv.number_of_times_called(:on?)).to eq(0)
   end
 
-  it "proxies any object" do
-    proxy = Proxy.new("Code Mash 2009")
+  it 'proxies any object' do
+    proxy = Proxy.new('Code Mash 2009')
 
     proxy.upcase!
     result = proxy.split
 
-    expect( result ).to eq( ["CODE", "MASH", "2009"] )
-    expect( proxy.messages ).to eq( [:upcase!, :split] )
+    expect(result).to eq(%w[CODE MASH 2009])
+    expect(proxy.messages).to eq(%i[upcase! split])
   end
 end
 
 # Tests for the Television class.  All of theses tests should pass.
-RSpec.describe "a television" do
-  it "turns on" do
+RSpec.describe 'a television' do
+  it 'turns on' do
     tv = Television.new
 
     tv.power
-    expect( tv ).to be_on
+    expect(tv).to be_on
   end
 
-  it "also turns off" do
-    tv = Television.new
-
-    tv.power
-    tv.power
-
-    expect( tv ).not_to be_on
-  end
-
-  it "turns back on and off" do
+  it 'also turns off' do
     tv = Television.new
 
     tv.power
     tv.power
-    tv.power
 
-    expect( tv ).to be_on
-
-    tv.power
-
-    expect( tv ).not_to be_on
+    expect(tv).not_to be_on
   end
 
-  it "can set a channel" do
+  it 'turns back on and off' do
+    tv = Television.new
+
+    tv.power
+    tv.power
+    tv.power
+
+    expect(tv).to be_on
+
+    tv.power
+
+    expect(tv).not_to be_on
+  end
+
+  it 'can set a channel' do
     tv = Television.new
 
     tv.channel = 11
-    expect( tv.channel ).to eq( 11 )
+    expect(tv.channel).to eq(11)
   end
 end
